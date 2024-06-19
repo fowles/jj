@@ -38,12 +38,13 @@ use crate::backend::{
     MillisSinceEpoch, SecureSig, Signature, SigningFn, SymlinkId, Timestamp, Tree, TreeId,
     TreeValue,
 };
+use crate::copy_tracking::CopyRecordStream;
 use crate::file_util::{IoResultExt as _, PathError};
 use crate::index::Index;
 use crate::lock::FileLock;
 use crate::merge::{Merge, MergeBuilder};
 use crate::object_id::ObjectId;
-use crate::repo_path::{RepoPath, RepoPathComponentBuf};
+use crate::repo_path::{RepoPath, RepoPathBuf, RepoPathComponentBuf};
 use crate::settings::UserSettings;
 use crate::stacked_table::{
     MutableTable, ReadonlyTable, TableSegment, TableStore, TableStoreError,
@@ -1227,6 +1228,15 @@ impl Backend for GitBackend {
         // packed-refs cache should be invalidated without relying on mtime.
         git_repo.refs.force_refresh_packed_buffer().ok();
         Ok(())
+    }
+
+    async fn get_copy_records(
+        &self,
+        _paths: &[RepoPathBuf],
+        _roots: &[CommitId],
+        _heads: &[CommitId],
+    ) -> CopyRecordStream {
+        Box::pin(futures::stream::empty())
     }
 }
 

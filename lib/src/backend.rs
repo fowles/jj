@@ -24,6 +24,7 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::content_hash::ContentHash;
+use crate::copy_tracking::CopyRecordStream;
 use crate::index::Index;
 use crate::merge::Merge;
 use crate::object_id::{id_type, ObjectId};
@@ -422,4 +423,22 @@ pub trait Backend: Send + Sync + Debug {
     /// objects created after `keep_newer` will be preserved. This mitigates a
     /// risk of deleting new commits created concurrently by another process.
     fn gc(&self, index: &dyn Index, keep_newer: SystemTime) -> BackendResult<()>;
+
+    /// Get all copy records for `paths` in the dag range `roots..heads`.
+    ///
+    /// The exact order these are returned is unspecified, but it is guaranteed
+    /// to be reverse-topological. That is, for any two copy records with
+    /// different commit ids A and B, if A is an ancestor of B, A is streamed
+    /// after B.
+    ///
+    /// Streaming by design to better support large backends which may have very
+    /// large single-file histories. This also allows more iterative algorithms
+    /// like blame/annotate to short-circuit after a point without wasting
+    /// unnecessary resources.
+    async fn get_copy_records(
+        &self,
+        paths: &[RepoPathBuf],
+        roots: &[CommitId],
+        heads: &[CommitId],
+    ) -> CopyRecordStream;
 }

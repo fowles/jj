@@ -32,6 +32,7 @@ pub mod backend;
 pub mod commit;
 pub mod commit_builder;
 pub mod conflicts;
+pub mod copy_tracking;
 pub mod dag_walk;
 pub mod default_index;
 pub mod default_submodule_store;

@@ -25,10 +25,11 @@ use crate::backend::{
     Backend, BackendError, BackendLoadError, BackendResult, ChangeId, Commit, CommitId, Conflict,
     ConflictId, FileId, SigningFn, SymlinkId, Tree, TreeId,
 };
+use crate::copy_tracking::CopyRecordStream;
 use crate::git_backend::GitBackend;
 use crate::index::Index;
 use crate::object_id::ObjectId;
-use crate::repo_path::RepoPath;
+use crate::repo_path::{RepoPath, RepoPathBuf};
 use crate::settings::UserSettings;
 
 const SECRET_CONTENTS_HEX: [&str; 2] = [
@@ -169,5 +170,14 @@ impl Backend for SecretBackend {
 
     fn gc(&self, index: &dyn Index, keep_newer: SystemTime) -> BackendResult<()> {
         self.inner.gc(index, keep_newer)
+    }
+
+    async fn get_copy_records(
+        &self,
+        paths: &[RepoPathBuf],
+        roots: &[CommitId],
+        heads: &[CommitId],
+    ) -> CopyRecordStream {
+        self.inner.get_copy_records(paths, roots, heads).await
     }
 }

@@ -25,6 +25,7 @@ use jj_lib::backend::{
     make_root_commit, Backend, BackendError, BackendResult, ChangeId, Commit, CommitId, Conflict,
     ConflictId, FileId, SecureSig, SigningFn, SymlinkId, Tree, TreeId,
 };
+use jj_lib::copy_tracking::CopyRecordStream;
 use jj_lib::index::Index;
 use jj_lib::object_id::ObjectId;
 use jj_lib::repo_path::{RepoPath, RepoPathBuf};
@@ -302,5 +303,14 @@ impl Backend for TestBackend {
 
     fn gc(&self, _index: &dyn Index, _keep_newer: SystemTime) -> BackendResult<()> {
         Ok(())
+    }
+
+    async fn get_copy_records(
+        &self,
+        _paths: &[RepoPathBuf],
+        _roots: &[CommitId],
+        _heads: &[CommitId],
+    ) -> CopyRecordStream {
+        Box::pin(futures::stream::empty())
     }
 }
