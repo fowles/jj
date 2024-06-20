@@ -25,10 +25,11 @@ use jj_lib::backend::{
     Backend, BackendInitError, BackendLoadError, BackendResult, ChangeId, Commit, CommitId,
     Conflict, ConflictId, FileId, SigningFn, SymlinkId, Tree, TreeId,
 };
+use jj_lib::copy_tracking::CopyRecordStream;
 use jj_lib::git_backend::GitBackend;
 use jj_lib::index::Index;
 use jj_lib::repo::StoreFactories;
-use jj_lib::repo_path::RepoPath;
+use jj_lib::repo_path::{RepoPath, RepoPathBuf};
 use jj_lib::settings::UserSettings;
 use jj_lib::signing::Signer;
 use jj_lib::workspace::{Workspace, WorkspaceInitError};
@@ -176,5 +177,18 @@ impl Backend for JitBackend {
 
     fn gc(&self, index: &dyn Index, keep_newer: SystemTime) -> BackendResult<()> {
         self.inner.gc(index, keep_newer)
+    }
+
+    async fn get_copy_records(
+        &self,
+        paths: &[RepoPathBuf],
+        roots: &[CommitId],
+        heads: &[CommitId],
+    ) -> CopyRecordStream {
+        self.inner.get_copy_records(paths, roots, heads).await
+    }
+
+    fn supports_copy_tracking(&self) -> bool {
+        self.inner.supports_copy_tracking()
     }
 }

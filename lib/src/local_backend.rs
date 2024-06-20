@@ -314,6 +314,10 @@ impl Backend for LocalBackend {
     ) -> CopyRecordStream {
         Box::pin(futures::stream::empty())
     }
+
+    fn supports_copy_tracking(&self) -> bool {
+        false
+    }
 }
 
 #[allow(unknown_lints)] // XXX FIXME (aseipp): nightly bogons; re-test this occasionally
@@ -369,6 +373,7 @@ fn commit_from_proto(mut proto: crate::protos::local_store::Commit) -> Commit {
         author: signature_from_proto(proto.author.unwrap_or_default()),
         committer: signature_from_proto(proto.committer.unwrap_or_default()),
         secure_sig,
+        copies: None,
     }
 }
 
@@ -525,6 +530,7 @@ mod tests {
             author: create_signature(),
             committer: create_signature(),
             secure_sig: None,
+            copies: None,
         };
 
         // No parents

@@ -455,14 +455,14 @@ fn test_workspaces_current_op_discarded_by_other() {
         ],
     );
     insta::assert_snapshot!(stdout, @r###"
-    @  716b8d737e abandon commit 8ac26d0060e2be7f3fce2b5ebd2eb0c75053666f6cbc41bee50bb6da463868704a0bcf1ed9848761206d77694a71e3c657e5e250245e342779df1b00f0da9009
-    ◉  bb8aec2a1c Create initial working-copy commit in workspace secondary
-    ◉  af6f39b411 add workspace 'secondary'
-    ◉  05c14c7e78 new empty commit
-    ◉  92bb962606 snapshot working copy
-    ◉  553e0ea3a4 new empty commit
-    ◉  b3755a9026 snapshot working copy
-    ◉  17dbb2fe40 add workspace 'default'
+    @  a03d2005e0 abandon commit 602fcae65c33a4692dec099cbd079deef2cded0862c6492803be67005f076f46bbc63ffed1f688d8fb7171d1ecb0e29a4c0737bc16862b665bf2ed9c5a9abd70
+    ◉  3665d427af Create initial working-copy commit in workspace secondary
+    ◉  8c44af8961 add workspace 'secondary'
+    ◉  a79a5d06c2 new empty commit
+    ◉  9c124a2559 snapshot working copy
+    ◉  1ccca0d859 new empty commit
+    ◉  9eeada2d0c snapshot working copy
+    ◉  58675fa50f add workspace 'default'
     ◉  cecfee9647 initialize repo
     ◉  0000000000
     "###);

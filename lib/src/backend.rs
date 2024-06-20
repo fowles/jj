@@ -15,7 +15,7 @@
 #![allow(missing_docs)]
 
 use std::any::Any;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fmt::Debug;
 use std::io::Read;
 use std::time::SystemTime;
@@ -24,7 +24,7 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::content_hash::ContentHash;
-use crate::copy_tracking::CopyRecordStream;
+use crate::copy_tracking::{CopyRecordStream, CopySources};
 use crate::index::Index;
 use crate::merge::Merge;
 use crate::object_id::{id_type, ObjectId};
@@ -136,6 +136,7 @@ pub struct Commit {
     pub author: Signature,
     pub committer: Signature,
     pub secure_sig: Option<SecureSig>,
+    pub copies: Option<HashMap<RepoPathBuf, CopySources>>,
 }
 
 #[derive(ContentHash, Debug, PartialEq, Eq, Clone)]
@@ -345,6 +346,7 @@ pub fn make_root_commit(root_change_id: ChangeId, empty_tree_id: TreeId) -> Comm
         author: signature.clone(),
         committer: signature,
         secure_sig: None,
+        copies: None,
     }
 }
 
@@ -441,4 +443,7 @@ pub trait Backend: Send + Sync + Debug {
         roots: &[CommitId],
         heads: &[CommitId],
     ) -> CopyRecordStream;
+
+    /// Whether this backend supports storing explicit copy records on write.
+    fn supports_copy_tracking(&self) -> bool;
 }

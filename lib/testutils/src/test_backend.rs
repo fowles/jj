@@ -313,4 +313,8 @@ impl Backend for TestBackend {
     ) -> CopyRecordStream {
         Box::pin(futures::stream::empty())
     }
+
+    fn supports_copy_tracking(&self) -> bool {
+        false
+    }
 }

@@ -520,6 +520,7 @@ fn commit_from_git_without_root_parent(
         author,
         committer,
         secure_sig,
+        copies: None,
     })
 }
 
@@ -1238,6 +1239,10 @@ impl Backend for GitBackend {
     ) -> CopyRecordStream {
         Box::pin(futures::stream::empty())
     }
+
+    fn supports_copy_tracking(&self) -> bool {
+        false
+    }
 }
 
 /// Write a tree conflict as a special tree with `.jjconflict-base-N` and
@@ -1697,6 +1702,7 @@ mod tests {
             author: create_signature(),
             committer: create_signature(),
             secure_sig: None,
+            copies: None,
         };
 
         // No parents
@@ -1775,6 +1781,7 @@ mod tests {
             author: create_signature(),
             committer: create_signature(),
             secure_sig: None,
+            copies: None,
         };
 
         // When writing a tree-level conflict, the root tree on the git side has the
@@ -1864,6 +1871,7 @@ mod tests {
             author: signature.clone(),
             committer: signature,
             secure_sig: None,
+            copies: None,
         };
         let commit_id = backend.write_commit(commit, None).unwrap().0;
         let git_refs: Vec<_> = git_repo
@@ -1941,6 +1949,7 @@ mod tests {
             author: create_signature(),
             committer: create_signature(),
             secure_sig: None,
+            copies: None,
         };
         // libgit2 doesn't seem to preserve negative timestamps, so set it to at least 1
         // second after the epoch, so the timestamp adjustment can remove 1
@@ -1982,6 +1991,7 @@ mod tests {
             author: create_signature(),
             committer: create_signature(),
             secure_sig: None,
+            copies: None,
         };
 
         let mut signer = |data: &_| {

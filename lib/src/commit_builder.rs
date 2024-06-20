@@ -52,6 +52,7 @@ impl CommitBuilder<'_> {
             author: signature.clone(),
             committer: signature,
             secure_sig: None,
+            copies: None,
         };
         CommitBuilder {
             mut_repo,

@@ -14,14 +14,17 @@
 
 #![allow(missing_docs, dead_code)]
 
-use futures::Stream;
 use std::collections::HashSet;
 use std::pin::Pin;
 
+use futures::Stream;
+
 use crate::backend::{BackendResult, CommitId, FileId};
+use crate::content_hash::ContentHash;
 use crate::repo_path::RepoPathBuf;
 
 /// An individual copy source.
+#[derive(ContentHash, Ord, PartialOrd, Hash, Debug, PartialEq, Eq, Clone)]
 pub struct CopySource {
     /// The source path a target was copied from.
     ///
@@ -44,6 +47,7 @@ pub struct CopySource {
     commit: Option<CommitId>,
 }
 
+#[derive(ContentHash, Debug, PartialEq, Eq, Clone)]
 pub enum CopySources {
     Resolved(CopySource),
     Conflict(HashSet<CopySource>),

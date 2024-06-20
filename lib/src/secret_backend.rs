@@ -180,4 +180,8 @@ impl Backend for SecretBackend {
     ) -> CopyRecordStream {
         self.inner.get_copy_records(paths, roots, heads).await
     }
+
+    fn supports_copy_tracking(&self) -> bool {
+        self.inner.supports_copy_tracking()
+    }
 }
