@@ -179,13 +179,13 @@ impl Backend for JitBackend {
         self.inner.gc(index, keep_newer)
     }
 
-    async fn get_copy_records(
+    fn get_copy_records(
         &self,
         paths: &[RepoPathBuf],
         roots: &[CommitId],
         heads: &[CommitId],
     ) -> CopyRecordStream {
-        self.inner.get_copy_records(paths, roots, heads).await
+        self.inner.get_copy_records(paths, roots, heads)
     }
 
     fn supports_copy_tracking(&self) -> bool {

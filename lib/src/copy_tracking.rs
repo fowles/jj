@@ -15,9 +15,8 @@
 #![allow(missing_docs, dead_code)]
 
 use std::collections::HashSet;
-use std::pin::Pin;
 
-use futures::Stream;
+use futures::stream::BoxStream;
 
 use crate::backend::{BackendResult, CommitId, FileId};
 use crate::content_hash::ContentHash;
@@ -54,6 +53,7 @@ pub enum CopySources {
 }
 
 /// An individual copy event, from file A -> B.
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct CopyRecord {
     /// The destination of the copy, B.
     target: RepoPathBuf,
@@ -68,4 +68,4 @@ pub struct CopyRecordOpts {
     // TODO: Probably something for git similarity detection
 }
 
-pub type CopyRecordStream = Pin<Box<dyn Stream<Item = BackendResult<CopyRecord>>>>;
+pub type CopyRecordStream<'a> = BoxStream<'a, BackendResult<CopyRecord>>;

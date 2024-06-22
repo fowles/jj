@@ -1231,12 +1231,13 @@ impl Backend for GitBackend {
         Ok(())
     }
 
-    async fn get_copy_records(
+    fn get_copy_records(
         &self,
         _paths: &[RepoPathBuf],
         _roots: &[CommitId],
         _heads: &[CommitId],
     ) -> CopyRecordStream {
+        println!("get_copy_records");
         Box::pin(futures::stream::empty())
     }
 

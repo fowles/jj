@@ -306,7 +306,7 @@ impl Backend for LocalBackend {
         Ok(())
     }
 
-    async fn get_copy_records(
+    fn get_copy_records(
         &self,
         _paths: &[RepoPathBuf],
         _roots: &[CommitId],

@@ -437,7 +437,7 @@ pub trait Backend: Send + Sync + Debug {
     /// large single-file histories. This also allows more iterative algorithms
     /// like blame/annotate to short-circuit after a point without wasting
     /// unnecessary resources.
-    async fn get_copy_records(
+    fn get_copy_records(
         &self,
         paths: &[RepoPathBuf],
         roots: &[CommitId],

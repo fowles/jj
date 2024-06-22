@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub mod copy_detection;
 pub mod fileset;
 pub mod index;
 pub mod operation;
@@ -29,6 +30,7 @@ use std::fmt::Debug;
 use clap::Subcommand;
 use jj_lib::local_working_copy::LocalWorkingCopy;
 
+use self::copy_detection::{cmd_debug_copy_detection, CopyDetectionArgs};
 use self::fileset::{cmd_debug_fileset, FilesetArgs};
 use self::index::{cmd_debug_index, IndexArgs};
 use self::operation::{cmd_debug_operation, OperationArgs};
@@ -52,6 +54,7 @@ pub enum DebugCommand {
     #[command(visible_alias = "view")]
     Operation(OperationArgs),
     Reindex(ReindexArgs),
+    CopyDetection(CopyDetectionArgs),
     Revset(RevsetArgs),
     Snapshot(SnapshotArgs),
     Template(TemplateArgs),
@@ -71,6 +74,7 @@ pub fn cmd_debug(
         DebugCommand::Index(args) => cmd_debug_index(ui, command, args),
         DebugCommand::Operation(args) => cmd_debug_operation(ui, command, args),
         DebugCommand::Reindex(args) => cmd_debug_reindex(ui, command, args),
+        DebugCommand::CopyDetection(args) => cmd_debug_copy_detection(ui, command, args),
         DebugCommand::Revset(args) => cmd_debug_revset(ui, command, args),
         DebugCommand::Snapshot(args) => cmd_debug_snapshot(ui, command, args),
         DebugCommand::Template(args) => cmd_debug_template(ui, command, args),
